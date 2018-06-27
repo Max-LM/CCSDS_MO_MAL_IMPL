@@ -25,8 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.ccsds.moims.mo.mal.*;
 import org.ccsds.moims.mo.mal.accesscontrol.MALAccessControl;
+import org.ccsds.moims.mo.mal.accesscontrol.MALCheckErrorException;
 import org.ccsds.moims.mo.mal.consumer.MALInteractionListener;
 import org.ccsds.moims.mo.mal.provider.MALPublishInteractionListener;
 import org.ccsds.moims.mo.mal.structures.*;
@@ -470,7 +472,8 @@ public class MessageSend
               rspnInteractionStage,
               qosProperties,
               rspn);
-
+      
+        msg = securityManager.check(msg);
       msgAddress.endpoint.sendMessage(msg);
     }
     catch (MALException ex)
@@ -487,7 +490,11 @@ public class MessageSend
     {
       MALContextFactoryImpl.LOGGER.log(Level.WARNING,
               "Error returning response to consumer : " + srcHdr.getURIFrom() + " : ", ex);
-    }
+    } 
+    catch (MALCheckErrorException ex) {
+          Logger.getLogger(MessageSend.class.getName()).log(Level.SEVERE, null,
+                  ex);
+      }
 
     return msg;
   }
@@ -531,6 +538,7 @@ public class MessageSend
               rspnInteractionStage,
               qosProperties,
               rspn);
+        msg = securityManager.check(msg);
 
       msgAddress.endpoint.sendMessage(msg);
     }
@@ -548,7 +556,11 @@ public class MessageSend
     {
       MALContextFactoryImpl.LOGGER.log(Level.WARNING,
               "Error returning response to consumer : " + srcHdr.getURIFrom() + " : ", ex);
-    }
+    } 
+    catch (MALCheckErrorException ex) {
+          Logger.getLogger(MessageSend.class.getName()).log(Level.SEVERE, null,
+                  ex);
+      }
 
     return msg;
   }
