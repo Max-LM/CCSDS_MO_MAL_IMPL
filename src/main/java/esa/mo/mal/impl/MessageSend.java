@@ -472,7 +472,7 @@ public class MessageSend
               rspnInteractionStage,
               qosProperties,
               rspn);
-      
+
         msg = securityManager.check(msg);
       msgAddress.endpoint.sendMessage(msg);
     }
@@ -490,7 +490,7 @@ public class MessageSend
     {
       MALContextFactoryImpl.LOGGER.log(Level.WARNING,
               "Error returning response to consumer : " + srcHdr.getURIFrom() + " : ", ex);
-    } 
+    }
     catch (MALCheckErrorException ex) {
           Logger.getLogger(MessageSend.class.getName()).log(Level.SEVERE, null,
                   ex);
@@ -556,7 +556,7 @@ public class MessageSend
     {
       MALContextFactoryImpl.LOGGER.log(Level.WARNING,
               "Error returning response to consumer : " + srcHdr.getURIFrom() + " : ", ex);
-    } 
+    }
     catch (MALCheckErrorException ex) {
           Logger.getLogger(MessageSend.class.getName()).log(Level.SEVERE, null,
                   ex);
