@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import org.ccsds.moims.mo.mal.*;
+import org.ccsds.moims.mo.mal.accesscontrol.MALAccessControl;
 import org.ccsds.moims.mo.mal.broker.MALBrokerBinding;
 import org.ccsds.moims.mo.mal.structures.*;
 import org.ccsds.moims.mo.mal.transport.MALEndpoint;
@@ -43,6 +44,7 @@ public class MALBrokerBindingImpl extends ServiceComponentImpl implements MALBro
   private final MALBrokerImpl brokerImpl;
   private final Set<String> subscriberSet = new TreeSet<String>();
   private MALTransmitErrorListener listener;
+    private MALAccessControl securityManager;
 
   MALBrokerBindingImpl(final MALBrokerImpl parent,
           final MALContextImpl impl,
@@ -66,12 +68,14 @@ public class MALBrokerBindingImpl extends ServiceComponentImpl implements MALBro
 
     this.brokerImpl = parent;
     this.endpoint.startMessageDelivery();
+    securityManager = impl.getSecurityManager();
 
     MALBrokerImpl.LOGGER.log(Level.FINE,
             "Creating internal MAL Broker for localName: {0} on protocol: {1} with URI: {2}", new Object[]
             {
               localName, protocol, this.localUri
             });
+    
   }
 
   MALBrokerBindingImpl(final MALBrokerImpl parent,
@@ -152,7 +156,8 @@ public class MALBrokerBindingImpl extends ServiceComponentImpl implements MALBro
             Boolean.FALSE,
             notifyQosProps,
             body);
-
+    
+    securityManager.check(msg);
     endpoint.sendMessage(msg);
 
     return msg;
